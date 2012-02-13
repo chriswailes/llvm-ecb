@@ -1,0 +1,29 @@
+/*
+ * Author:		Chris Wailes <chris.wailes@gmail.com>
+ * Project:		LLVM-ECB
+ * Date:			2012/02/13
+ * Description:	Main header file for LLVM-ECB.
+ */
+
+#ifndef LLVM_ECB_H
+#define LLVM_ECB_H
+
+// Standard Includes
+
+// Project Includes
+
+// Macros
+
+#define LLVM_ECB_VERSION_MAJOR @LLVM_ECB_VERSION_MAJOR@
+#define LLVM_ECB_VERSION_MINOR @LLVM_ECB_VERSION_MINOR@
+
+#define LLVM_TARGET_VERSION @LLVM_TARGET_VERSION@
+
+// Types
+
+// Functions
+
+char* LLVMECBVersion(void);
+char* LLVMTargetVersion(void);
+
+#endif
