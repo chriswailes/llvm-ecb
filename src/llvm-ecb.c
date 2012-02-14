@@ -25,7 +25,7 @@ char* LLVMECBVersion(void) {
 	
 	buffer = (char*)malloc(VERSION_BUFFER_SIZE);
 	
-	snprintf(buffer, VERSION_BUFFER_SIZE, "%s-%d.%d", LLVM_TARGET_VERSION, LLVM_ECB_VERSION_MAJOR, LLVM_ECB_VERSION_MINOR);
+	snprintf(buffer, VERSION_BUFFER_SIZE, "%d.%d.%d", LLVM_TARGET_VERSION_MAJOR, LLVM_TARGET_VERSION_MINOR, LLVM_ECB_VERSION);
 	
 	return buffer;
 }
@@ -35,7 +35,8 @@ char* LLVMTargetVersion(void) {
 	
 	buffer = (char*)malloc(VERSION_BUFFER_SIZE);
 	
-	snprintf(buffer, VERSION_BUFFER_SIZE, "%s", LLVM_TARGET_VERSION);
+	snprintf(buffer, VERSION_BUFFER_SIZE, "%d.%d", LLVM_TARGET_VERSION_MAJOR, LLVM_TARGET_VERSION_MINOR);
 	
 	return buffer;
 }
+

@@ -19,6 +19,8 @@ add_subdirectory(support)
 # Libraries #
 #############
 
-add_library(llvm-ecb SHARED llvm-ecb.c)
-
-target_link_libraries(llvm-ecb support/support.a)
+add_library(LLVM-ECB SHARED
+	llvm-ecb.c
+	
+	support/support.cpp
+	)

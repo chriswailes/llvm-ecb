@@ -7,6 +7,7 @@
 
 // Standard Includes
 
+#include <llvm/ADT/StringRef.h>
 #include <llvm/Support/DynamicLibrary.h>
 
 // Project Includes
