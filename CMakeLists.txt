@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(LLVM-ECB)
 
-set(PACKAGE_VERSION "3.0.0")
+set(PACKAGE_VERSION "3.0-0.0")
 
 set(PACKAGE_NAME llvm-ecb)
 set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")

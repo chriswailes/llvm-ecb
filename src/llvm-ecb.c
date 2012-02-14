@@ -10,7 +10,6 @@
 #include <stdlib.h>
 
 // Project Includes
-
 #include "llvm-ecb.h"
 
 // Macros

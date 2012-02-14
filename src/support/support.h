@@ -18,8 +18,6 @@
 
 // Functions
 
-extern "C" {
-	int LLVMLoadLibraryPermanently(const char* filename);
-}
+int LLVMLoadLibraryPermanently(const char* filename);
 
 #endif
