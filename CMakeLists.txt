@@ -15,6 +15,7 @@ set(LLVM_ECB_VERSION 0)
 
 set(LLVM_TARGET_VERSION_MAJOR 3)
 set(LLVM_TARGET_VERSION_MINOR 0)
+set(LLVM_TARGET_VERSION "${LLVM_TARGET_VERSION_MAJOR}.${LLVM_TARGET_VERSION_MINOR}")
 
 #####################
 # Project Variables #
@@ -54,6 +55,15 @@ endif ()
 include_directories(LIST_INCLUDES) 
 
 include_directories(${CMAKE_BINARY_DIR}/src)
+
+#############################
+# Compiler and Linker Flags #
+#############################
+
+set(CMAKE_CXX_FLAGS "-O3 -fPIC -Wall")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+
+set(CMAKE_SHARED_LINKER_FLAGS "-lLLVM-${LLVM_TARGET_VERSION} -lpthread -lrt -ldl -lcrypt -lm")
 
 ##################
 # Subdirectories #
