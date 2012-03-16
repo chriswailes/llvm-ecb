@@ -23,6 +23,12 @@ add_library(LLVM-ECB-${LLVM_TARGET_VERSION} SHARED
 	support/support.cpp
 	)
 
+set_target_properties(LLVM-ECB-${LLVM_TARGET_VERSION} PROPERTIES
+	LINK_FLAGS "-lLLVM-${LLVM_TARGET_VERSION} -lpthread -lrt -ldl -lcrypt -lm"
+	COMPILE_FLAGS "-O3 -fPIC -Wall"
+	COMPILE_FLAGS_DEBUG "-g"
+	)
+
 ########################
 # Installation Targets #
 ########################

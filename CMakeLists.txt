@@ -56,15 +56,6 @@ include_directories(LIST_INCLUDES)
 
 include_directories(${CMAKE_BINARY_DIR}/src)
 
-#############################
-# Compiler and Linker Flags #
-#############################
-
-set(CMAKE_CXX_FLAGS "-O3 -fPIC -Wall")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
-
-set(CMAKE_SHARED_LINKER_FLAGS "-lLLVM-${LLVM_TARGET_VERSION} -lpthread -lrt -ldl -lcrypt -lm")
-
 ##################
 # Subdirectories #
 ##################
