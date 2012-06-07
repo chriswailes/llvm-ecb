@@ -1,0 +1,7 @@
+The LLVM Extended C Bindings library can be installed using the CMake program and the following commands:
+
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
