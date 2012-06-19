@@ -5,8 +5,8 @@
  * Description:	Header file for C bindings for the LLVM::Support namespace.
  */
 
-#ifndef SUPPORT_H
-#define SUPPORT_H
+#ifndef ECB_SUPPORT_H
+#define ECB_SUPPORT_H
 
 // Standard Includes
 

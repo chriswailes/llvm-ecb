@@ -5,8 +5,8 @@
  * Description:	Header file for C bindings for the LLVM::Value class.
  */
 
-#ifndef VALUE_H
-#define VALUE_H
+#ifndef ECB_VALUE_H
+#define ECB_VALUE_H
 
 // Standard Includes
 

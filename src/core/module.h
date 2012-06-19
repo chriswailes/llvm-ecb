@@ -5,8 +5,8 @@
  * Description:	Header file for C bindings for the LLVM::module class.
  */
 
-#ifndef MODULE_H
-#define MODULE_H
+#ifndef ECB_MODULE_H
+#define ECB_MODULE_H
 
 // Standard Includes
 

@@ -18,8 +18,10 @@
 
 // Functions
 
+using namespace llvm;
+
 extern "C" {
 	int LLVMLoadLibraryPermanently(const char* filename) {
-		return llvm::sys::DynamicLibrary::LoadLibraryPermanently(filename);
+		return sys::DynamicLibrary::LoadLibraryPermanently(filename);
 	}
 }
