@@ -11,6 +11,8 @@
 
 // Standard Includes
 
+#include <sys/types.h>
+
 #include <llvm-c/Core.h>
 
 // Project Includes
@@ -19,36 +21,89 @@
 
 // Types
 
-typedef struct LLVMOpaqueTarget* LLVMTargetRef;
-typedef struct LLVMOpaqueTriple* LLVMTripleRef;
+typedef enum {
+	DEFAULT_CMODEL,
+	KERNEL,
+	SMALL,
+	MEDIUM,
+	LARGE
+} code_model;
+
+typedef enum {
+	DEFAULT_RMODEL,
+	STATIC,
+	PIC,
+	DYNAMIC_NO_PIC
+} reloc_model;
+
+typedef enum {
+	ASM,
+	OBJ
+} compile_type;
+
+typedef struct LLVMOpaqueTarget*		LLVMTargetRef;
+typedef struct LLVMOpaqueTargetMachine*	LLVMTargetMachineRef;
+typedef struct LLVMOpaqueTriple*		LLVMTripleRef;
 
 // Functions
 
 extern "C" {
+	
+	// Utility
+	
+	char*				LLVMBuildFeatureString(char** attrs, int num_attrs);
+	
+	void					LLVMCompileModuleToFile(LLVMModuleRef mod, LLVMTargetMachineRef machine, LLVMPassManagerRef pm, char* file_name, compile_type ctype, uint opt_level, uint no_verify);
+	
+	void					LLVMECBInitializeAllTargets(void);
+	void					LLVMECBInitializeNativeTarget(void);
+	
+	// Target
+	
+	LLVMTargetRef			LLVMGetTargetFromName(char* name);
+	LLVMTargetRef			LLVMGetTargetFromTriple(LLVMTripleRef triple);
+	
+	// Target Machine
+	
+	LLVMTargetMachineRef	LLVMCreateTargetMachine(LLVMTargetRef target, char* triple,  char* mcpu, char* features, reloc_model rmodel, code_model cmodel);
+	void					LLVMSetTargetMachineASMVerbosity(LLVMTargetMachineRef machine, int boolean);
+	
+	// Triple
+	
+	LLVMTripleRef			LLVMGetHostTriple(void);
+	char*				LLVMGetHostTripleString(void);
+	char*				LLVMGetTripleString(LLVMTripleRef triple);
 
-LLVMTripleRef	LLVMGetHostTriple(void);
-char*		LLVMGetHostTripleString(void);
-
-LLVMTripleRef	LLVMTripleCreate(char* string);
-
-void LLVMECBInitializeAllTargets(void);
-void LLVMECBInitializeNativeTarget(void);
-
-LLVMTargetRef LLVMGetTargetFromName(char* name);
-LLVMTargetRef LLVMGetTargetFromTriple(LLVMTripleRef triple);
+	LLVMTripleRef			LLVMTripleCreate(char* string);
 
 }
 
-LLVMTripleRef	LLVMGetHostTriple(void);
-char*		LLVMGetHostTripleString(void);
+// Utility
+	
+char*				LLVMBuildFeatureString(char** attrs, int num_attrs);
 
-LLVMTripleRef	LLVMTripleCreate(char* string);
+void					LLVMCompileModuleToFile(LLVMModuleRef mod, LLVMTargetMachineRef machine, LLVMPassManagerRef pm, char* file_name, compile_type ctype, uint opt_level, uint no_verify);
 
-void LLVMECBInitializeAllTargets(void);
-void LLVMECBInitializeNativeTarget(void);
+void					LLVMECBInitializeAllTargets(void);
+void					LLVMECBInitializeNativeTarget(void);
 
-LLVMTargetRef LLVMGetTargetFromName(char* name);
-LLVMTargetRef LLVMGetTargetFromTriple(LLVMTripleRef triple);
+// Target
+
+LLVMTargetRef			LLVMGetTargetFromName(char* name);
+LLVMTargetRef			LLVMGetTargetFromTriple(LLVMTripleRef triple);
+
+// Target Machine
+
+LLVMTargetMachineRef	LLVMCreateTargetMachine(LLVMTargetRef target, char* triple,  char* mcpu, char* features, reloc_model rmodel, code_model cmodel);
+void					LLVMSetTargetMachineASMVerbosity(int boolean);
+
+// Triple
+
+LLVMTripleRef			LLVMGetHostTriple(void);
+char*				LLVMGetHostTripleString(void);
+char*				LLVMGetTripleString(LLVMTripleRef triple);
+
+LLVMTripleRef			LLVMTripleCreate(char* string);
 
 namespace llvm {
 	
@@ -59,6 +114,15 @@ namespace llvm {
 	
 	inline LLVMTargetRef wrap(const Target* t) {
 		return reinterpret_cast<LLVMTargetRef>(const_cast<Target*>(t));
+	}
+	
+	// TargetMachine
+	inline TargetMachine* unwrap(LLVMTargetMachineRef t) {
+		return reinterpret_cast<TargetMachine*>(t);
+	}
+	
+	inline LLVMTargetMachineRef wrap(const TargetMachine* t) {
+		return reinterpret_cast<LLVMTargetMachineRef>(const_cast<TargetMachine*>(t));
 	}
 	
 	// Triple
