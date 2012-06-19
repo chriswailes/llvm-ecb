@@ -48,7 +48,7 @@ extern "C" {
 	
 	// Utility
 	
-	char* LLVMBuildFeatureString(char** attrs, int num_attrs) {
+	char* LLVMBuildFeaturesString(char** attrs, int num_attrs) {
 		SubtargetFeatures features;
 		
 		while (num_attrs--) {

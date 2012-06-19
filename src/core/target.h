@@ -47,11 +47,13 @@ typedef struct LLVMOpaqueTriple*		LLVMTripleRef;
 
 // Functions
 
+#ifdef __cplusplus
 extern "C" {
+#endif
 	
 	// Utility
 	
-	char*				LLVMBuildFeatureString(char** attrs, int num_attrs);
+	char*				LLVMBuildFeaturesString(char** attrs, int num_attrs);
 	
 	void					LLVMCompileModuleToFile(LLVMModuleRef mod, LLVMTargetMachineRef machine, LLVMPassManagerRef pm, char* file_name, compile_type ctype, uint opt_level, uint no_verify);
 	
@@ -76,34 +78,9 @@ extern "C" {
 
 	LLVMTripleRef			LLVMTripleCreate(char* string);
 
+#ifdef __cplusplus
 }
-
-// Utility
-	
-char*				LLVMBuildFeatureString(char** attrs, int num_attrs);
-
-void					LLVMCompileModuleToFile(LLVMModuleRef mod, LLVMTargetMachineRef machine, LLVMPassManagerRef pm, char* file_name, compile_type ctype, uint opt_level, uint no_verify);
-
-void					LLVMECBInitializeAllTargets(void);
-void					LLVMECBInitializeNativeTarget(void);
-
-// Target
-
-LLVMTargetRef			LLVMGetTargetFromName(char* name);
-LLVMTargetRef			LLVMGetTargetFromTriple(LLVMTripleRef triple);
-
-// Target Machine
-
-LLVMTargetMachineRef	LLVMCreateTargetMachine(LLVMTargetRef target, char* triple,  char* mcpu, char* features, reloc_model rmodel, code_model cmodel);
-void					LLVMSetTargetMachineASMVerbosity(int boolean);
-
-// Triple
-
-LLVMTripleRef			LLVMGetHostTriple(void);
-char*				LLVMGetHostTripleString(void);
-char*				LLVMGetTripleString(LLVMTripleRef triple);
-
-LLVMTripleRef			LLVMTripleCreate(char* string);
+#endif
 
 namespace llvm {
 	
