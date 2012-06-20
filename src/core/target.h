@@ -38,7 +38,7 @@ typedef enum {
 
 typedef enum {
 	ASM,
-	OBJ
+	OBJECT
 } compile_type;
 
 typedef struct LLVMOpaqueTarget*		LLVMTargetRef;

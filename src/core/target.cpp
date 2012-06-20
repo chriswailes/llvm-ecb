@@ -8,6 +8,8 @@
 
 // Standard Includes
 
+#include <stdio.h>
+
 #include <llvm/PassManager.h>
 #include <llvm/ADT/Triple.h>
 #include <llvm/MC/SubtargetFeature.h>
@@ -75,10 +77,23 @@ extern "C" {
 		 * Open the output file.
 		 */
 		
-		if (ctype == OBJ) oflags |= raw_fd_ostream::F_Binary;
+		printf("Module: %p\n", mod);
+		printf("Target Machine: %p\n", machine);
+		printf("Pass Manager: %p\n", pm);
+		printf("Output file name: %s\n", file_name);
+		printf("File type: %s\n", ctype == OBJECT ? "object" : "assembly");
+		printf("Optimization level: %u\n", opt_level);
+		printf("No Verify: %u\n", no_verify);
+		
+		if (ctype == OBJECT) oflags |= raw_fd_ostream::F_Binary;
 		
 		// FIXME Handle errors in opening the tool output file.
 		ofile	= new tool_output_file(file_name, error, oflags);
+		
+		if (!error.empty()) {
+			printf("There was an error creating the tool output file: %s\n", error.c_str());
+		}
+		
 		ostream	= new formatted_raw_ostream(ofile->os());
 		
 		// Select the optimization level.
@@ -107,13 +122,18 @@ extern "C" {
 		// Create a new pass manager if one isn't provided.
 		cpp_pm = (pm == NULL) ? new PassManager() : unwrap<PassManager>(pm);
 		
+		// Tell the target machine to generate verbose ASM.
+		cpp_machine->setAsmVerbosityDefault(true);
+		
 		// Add the target data to the pass manager.
 		// FIXME Handle the case where the target machine doesn't have target data?
 		cpp_pm->add(new TargetData(*(cpp_machine->getTargetData())));
 		
 		// Tell the target to add necessary passes for code generation.
 		// FIXME Handle error where the target doesn't support generation of a given file type.
-		cpp_machine->addPassesToEmitFile(*cpp_pm, *ostream, cpp_ctype, OLvl, no_verify);
+		if (cpp_machine->addPassesToEmitFile(*cpp_pm, *ostream, cpp_ctype, OLvl, no_verify)) {
+			printf("There was an error with adding the necessary passes to emit a file.\n");
+		}
 		
 		// Run the pass manager, generating the output file.
 		cpp_pm->run(*unwrap(mod));
@@ -157,8 +177,14 @@ extern "C" {
 	LLVMTargetRef LLVMGetTargetFromTriple(LLVMTripleRef triple) {
 		std::string error;
 		
+		printf("Getting target from triple: %s\n", unwrap(triple)->getTriple().c_str());
+		
 		// FIXME Handle errors where the target can't be found from the triple.
-		return wrap(TargetRegistry::lookupTarget(unwrap(triple)->getTriple(), error));
+		const Target* target = TargetRegistry::lookupTarget(unwrap(triple)->getTriple(), error);
+		
+		if (target == NULL) printf("Error getting target: %s\n", error.c_str());
+		
+		return wrap(target);
 	}
 	
 	// Target Machine
@@ -166,6 +192,10 @@ extern "C" {
 	LLVMTargetMachineRef LLVMCreateTargetMachine(LLVMTargetRef target, char* triple,  char* mcpu, char* features, reloc_model rmodel, code_model cmodel) {
 		CodeModel::Model	cpp_cmodel;
 		Reloc::Model		cpp_rmodel;
+		
+		printf("Creating target machine with triple: %s\n", triple);
+		printf("Creating target machine with mpcu: %s\n", mcpu);
+		printf("Creating target machine with features: %s\n", features);
 		
 		switch (rmodel) {
 			case STATIC:
@@ -210,7 +240,13 @@ extern "C" {
 		}
 		
 		// FIXME Handle errors in allocating the target machine.
-		return wrap(unwrap(target)->createTargetMachine(triple, mcpu, features, cpp_rmodel, cpp_cmodel));
+		TargetMachine* cpp_machine = unwrap(target)->createTargetMachine(triple, mcpu, features, cpp_rmodel, cpp_cmodel);
+		
+		if (cpp_machine == NULL) {
+			printf("Couldn't allocate the target machine.\n");
+		}
+		
+		return wrap(cpp_machine);
 	}
 	
 	void LLVMSetTargetMachineASMVerbosity(LLVMTargetMachineRef machine, int boolean) {
