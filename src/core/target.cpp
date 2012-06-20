@@ -73,10 +73,6 @@ extern "C" {
 		tool_output_file* ofile;
 		formatted_raw_ostream* ostream;
 		
-		/*
-		 * Open the output file.
-		 */
-		
 		printf("Module: %p\n", mod);
 		printf("Target Machine: %p\n", machine);
 		printf("Pass Manager: %p\n", pm);
@@ -84,6 +80,10 @@ extern "C" {
 		printf("File type: %s\n", ctype == OBJECT ? "object" : "assembly");
 		printf("Optimization level: %u\n", opt_level);
 		printf("No Verify: %u\n", no_verify);
+		
+		/*
+		 * Open the output file.
+		 */
 		
 		if (ctype == OBJECT) oflags |= raw_fd_ostream::F_Binary;
 		
@@ -122,12 +122,12 @@ extern "C" {
 		// Create a new pass manager if one isn't provided.
 		cpp_pm = (pm == NULL) ? new PassManager() : unwrap<PassManager>(pm);
 		
-		// Tell the target machine to generate verbose ASM.
-		cpp_machine->setAsmVerbosityDefault(true);
-		
 		// Add the target data to the pass manager.
 		// FIXME Handle the case where the target machine doesn't have target data?
 		cpp_pm->add(new TargetData(*(cpp_machine->getTargetData())));
+		
+		// Tell the target machine to generate verbose ASM.
+		cpp_machine->setAsmVerbosityDefault(true);
 		
 		// Tell the target to add necessary passes for code generation.
 		// FIXME Handle error where the target doesn't support generation of a given file type.
@@ -212,6 +212,7 @@ extern "C" {
 			
 			case DEFAULT_RMODEL:
 			default:
+				printf("Using default relocatino model.\n");
 				cpp_rmodel = Reloc::Default;
 				break;
 		}
@@ -235,6 +236,7 @@ extern "C" {
 				
 			case DEFAULT_CMODEL:
 			default:
+				printf("Using default code model.\n");
 				cpp_cmodel = CodeModel::Default;
 				break;
 		}
