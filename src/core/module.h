@@ -20,6 +20,8 @@
 
 // Functions
 
+LLVMModuleRef LLVMLoadModuleFromIRFile(char* file_name, LLVMContextRef context);
+
 void LLVMPrintModule(LLVMModuleRef mod, int fd);
 
 #endif

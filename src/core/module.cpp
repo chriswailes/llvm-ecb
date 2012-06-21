@@ -7,8 +7,12 @@
 
 // Standard Includes
 
-#include <llvm-c/Core.h>
+#include <llvm/LLVMContext.h>
+#include <llvm/Support/IRReader.h>
+#include <llvm/Support/SourceMgr.h>
 #include <llvm/Support/raw_ostream.h>
+
+#include <llvm-c/Core.h>
 
 // Project Includes
 
@@ -21,6 +25,12 @@
 using namespace llvm;
 
 extern "C" {
+	LLVMModuleRef LLVMLoadModuleFromIRFile(char* file_name, LLVMContextRef context) {
+		SMDiagnostic error;
+		
+		return wrap(ParseIRFile(file_name, error, *unwrap(context)));
+	}
+	
 	void LLVMPrintModule(LLVMModuleRef mod, int fd) {
 		raw_fd_ostream stream(fd, false, false);
 		
