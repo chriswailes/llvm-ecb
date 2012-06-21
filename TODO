@@ -1,2 +1,3 @@
 Figure out how to handle errors.
 Add more functionality for handling Triples.
+Add methods for deleting allocated objects.

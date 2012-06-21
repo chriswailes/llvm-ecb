@@ -73,14 +73,6 @@ extern "C" {
 		tool_output_file* ofile;
 		formatted_raw_ostream* ostream;
 		
-		printf("Module: %p\n", mod);
-		printf("Target Machine: %p\n", machine);
-		printf("Pass Manager: %p\n", pm);
-		printf("Output file name: %s\n", file_name);
-		printf("File type: %s\n", ctype == OBJECT ? "object" : "assembly");
-		printf("Optimization level: %u\n", opt_level);
-		printf("No Verify: %u\n", no_verify);
-		
 		/*
 		 * Open the output file.
 		 */
@@ -88,13 +80,13 @@ extern "C" {
 		if (ctype == OBJECT) oflags |= raw_fd_ostream::F_Binary;
 		
 		// FIXME Handle errors in opening the tool output file.
-		ofile	= new tool_output_file(file_name, error, oflags);
+		ofile = new tool_output_file(file_name, error, oflags);
 		
 		if (!error.empty()) {
 			printf("There was an error creating the tool output file: %s\n", error.c_str());
 		}
 		
-		ostream	= new formatted_raw_ostream(ofile->os());
+		ostream = new formatted_raw_ostream(ofile->os());
 		
 		// Select the optimization level.
 		switch (opt_level) {
@@ -143,6 +135,10 @@ extern "C" {
 		
 		// Clean up the pass manager if we created it.
 		if (pm == NULL) delete cpp_pm;
+		
+		// Clean up everything else.
+		delete ostream;
+		delete ofile;
 	}
 	
 	void LLVMECBInitializeAllTargets(void) {
@@ -177,8 +173,6 @@ extern "C" {
 	LLVMTargetRef LLVMGetTargetFromTriple(LLVMTripleRef triple) {
 		std::string error;
 		
-		printf("Getting target from triple: %s\n", unwrap(triple)->getTriple().c_str());
-		
 		// FIXME Handle errors where the target can't be found from the triple.
 		const Target* target = TargetRegistry::lookupTarget(unwrap(triple)->getTriple(), error);
 		
@@ -192,10 +186,6 @@ extern "C" {
 	LLVMTargetMachineRef LLVMCreateTargetMachine(LLVMTargetRef target, char* triple,  char* mcpu, char* features, reloc_model rmodel, code_model cmodel) {
 		CodeModel::Model	cpp_cmodel;
 		Reloc::Model		cpp_rmodel;
-		
-		printf("Creating target machine with triple: %s\n", triple);
-		printf("Creating target machine with mpcu: %s\n", mcpu);
-		printf("Creating target machine with features: %s\n", features);
 		
 		switch (rmodel) {
 			case STATIC:
@@ -212,7 +202,6 @@ extern "C" {
 			
 			case DEFAULT_RMODEL:
 			default:
-				printf("Using default relocatino model.\n");
 				cpp_rmodel = Reloc::Default;
 				break;
 		}
@@ -236,7 +225,6 @@ extern "C" {
 				
 			case DEFAULT_CMODEL:
 			default:
-				printf("Using default code model.\n");
 				cpp_cmodel = CodeModel::Default;
 				break;
 		}
